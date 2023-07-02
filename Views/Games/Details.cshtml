@@ -1,0 +1,222 @@
+﻿@model MvcMovie.Models.Game
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<style>
+
+    /* Styling for the table */
+    .table-review{
+        width: 100%;
+        border-collapse: collapse;
+        margin-top : 10px;
+    }
+
+    .review-header{
+        text-align : center;
+    }
+
+        .table-review th,
+        .table-review td {
+            padding: 8px;
+            padding-right :100px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table-review td {
+            white-space: normal;
+            word-break: break-word;
+        }
+
+
+    /* Styling for the form */
+    form {
+        margin-top: 20px;
+    }
+
+        form p {
+            margin-bottom: 6px;
+            margin-top : 10px;
+        }
+
+        form input[type="text"] {
+            width: 20%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        form button[type="submit"] {
+            padding: 8px 16px;
+            background-color: #15DADD;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+    /* Additional styling */
+    h1 {
+        margin-top: 20px;
+    }
+
+    hr {
+        margin-top: 10px;
+    }
+
+    a {
+        text-decoration: none;
+        margin-right: 10px;
+        color: #007bff;
+    }
+
+    .review-input {
+        margin-top: 10px;
+    }
+
+        .review-input label {
+            display: block;
+            font-weight: bold;
+        }
+
+        .review-input textarea {
+            width: 40%;
+            padding: 5px;
+            resize: vertical;
+        }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+</style>
+
+
+<h1>Details</h1>
+
+    <div>
+        <h4>Game</h4>
+        <hr />
+
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ReleaseDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ReleaseDate)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Genre)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Genre)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Price)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Price)
+            </dd>
+        </dl>
+
+    </div>
+
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
+
+
+@if (Model != null)
+{
+    <table class="table-review">
+        <thead>
+            <tr>
+                <th>
+                    <a>Username</a>
+                </th>
+                <th>
+                    <a>Review Date</a>
+                </th>
+                <th>
+                    <p class = "review-header">Review</p>
+                </th>
+                <th></th>
+            </tr>
+
+        </thead>
+        <tbody>
+                <tr>
+                    <td>
+                    @if (Model.ReviewDate.HasValue)
+                    {
+                        <span>@Model.Username</span>
+                    }
+                    else
+                    {
+                        <span></span>
+                    }
+                    </td>
+                    <td>
+                        @if (Model.ReviewDate.HasValue)
+                        {
+                            @Model.ReviewDate.Value.Date.ToString("yyyy-MM-dd");
+                        }
+                        else
+                        {
+                            <span></span>
+                        }
+                    </td>
+                    <td>
+                        <div class="review-text">
+                            @Html.DisplayFor(item => item.Review)
+                        </div>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+    
+     <form method="post" asp-route-id="@Model?.Id" asp-action="Details">
+        <div id="inputContainer">
+         <p class="username">Username</p>
+         <input asp-for="@Model.Username" type="text" name="Username" />
+         <div class="review-input">
+            <label  for="Review">Write your review</label>
+            <textarea asp-for="@Model.Review" name="Review" rows="5"></textarea>
+            </div>
+            <button type="submit">Send</button>
+         </div>
+     </form>
+
+}
+
+<script>
+    // Wait for the DOM to load
+    document.addEventListener("DOMContentLoaded", function () {
+        // Select the input container element
+        var inputContainer = document.getElementById("inputContainer");
+
+        // Get all the input fields within the container
+        var inputFields = inputContainer.getElementsByTagName("input");
+        var textareaField = inputContainer.getElementsByTagName("textarea")[0];
+
+
+        // Clear the values of the input fields on page load
+        for (var i = 0; i < inputFields.length; i++) {
+            inputFields[i].value = "";
+        }
+
+        if(textareaField){
+            textareaField.value = "";
+        }
+
+
+    });
+</script>

@@ -1,0 +1,212 @@
+﻿@model TotalModels
+
+@using MvcMovie.Models
+
+
+<h1>Games List</h1>
+
+<style>
+    
+    .search-input:focus::placeholder {
+    color: transparent;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f7f7f7;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 100px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-top: 0;
+    }
+
+    .search-form {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .search-input {
+        width: 300px;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        transition: border-color 0.3s ease-in-out;
+    }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #6c63ff;
+        }
+
+    .search-button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #6c63ff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+        .search-button:hover {
+            background-color: #524bff;
+        }
+
+        .search-button:focus {
+            outline: none;
+        }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th,
+    td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    .action-links a {
+        color: #6c63ff;
+        margin-right: 10px;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .page-item {
+        margin: 0 5px;
+    }
+
+    .page-link {
+        padding: 5px 10px;
+        background-color: #f2f2f2;
+        color: #6c63ff;
+        text-decoration: none;
+        border: 1px solid #ddd;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+        .page-link:hover {
+            background-color: #6c63ff;
+            color: #fff;
+        }
+
+        .page-link.active {
+            background-color: #6c63ff;
+            color: #fff;
+        }
+
+</style>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            <input type="text" placeholder="Enter your search title" name="SearchString" value="@ViewData["CurrentFilter"]" class="search-input" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="Index">Back to Full List</a>
+        </p>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+
+
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Title</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">ReleaseDate</a>
+            </th>
+            <th>
+                Genre
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["PriceSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Price</a>
+            </th>
+            <th></th>
+        </tr>
+
+    </thead>
+    <tbody>
+
+
+        @foreach (var item in Model.PaginatedList)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReleaseDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<nav aria-label="Page navigation">
+    @if (Model != null && Model.PaginatedList.TotalPages > 0)
+    {
+        <ul class="pagination">
+
+            @for (int i = 1; i <= Model.PaginatedList.TotalPages; i++)
+            {
+                if (i == Model.PaginatedList.PageIndex)
+                {
+                    <li class="page-item"><a class="page-link active " href="#">@i</a></li>
+                }
+                else
+                {
+                    <li class="page-item"><a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-pageNumber="@i" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="page-link ">@i</a></li>
+
+                }
+            }
+
+        </ul>
+    }
+</nav>
